@@ -21,15 +21,8 @@ mongoose.connection.on('disconnected', function () {
 })
 
 // ******* 查询商品列表 ********
-router.get('/', function(req, res, next) {
+router.get('/list', function(req, res, next) {
 	// 从网址url中获取相关参数
-
-	// let page = parseInt(req.param("page")); // 第几页
-	// let pageSize = parseInt(req.param("pageSize")); // 一页几个商品数据
-	// let sort = req.param("sort"); // 升or降序排序
-	// let skip = (page-1)*pageSize;
-	// let priceLevel = req.param('priceLevel'); // 价格区间
-
 	let page = parseInt(req.query.page); // 第几页
 	let pageSize = parseInt(req.query.pageSize); // 一页几个商品数据
 	let sort = req.query.sort; // 升or降序排序
@@ -55,7 +48,7 @@ router.get('/', function(req, res, next) {
 		}
 	}
 
-	console.log(`page:${page}, pageSize:${pageSize}, sort: ${sort}, priceLevel: ${priceLevel}, priceGt-priceLte: ${priceGt}-${priceLte}`)
+	console.log(`routes/goods.js 51: page:${page}, pageSize:${pageSize}, sort: ${sort}, priceLevel: ${priceLevel}, priceGt-priceLte: ${priceGt}-${priceLte}`)
 
 	// 当查询时同时使用sort,skip,limit，无论位置先后，执行顺序sort再skip再limit。
 	let goodsModel = Goods.find(param).skip(skip).limit(pageSize);

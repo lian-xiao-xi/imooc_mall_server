@@ -29,6 +29,27 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+// 登录拦截
+app.use(function(req, res, next) {
+	
+	if(req.cookies.userId) {
+		next()
+	} else {
+		console.log(`app.js 39: path: ${req.path}, originalUrl: ${req.originalUrl}`)
+		if(req.originalUrl === '/users/login' || req.originalUrl === '/users/logout' || req.originalUrl === '/users/checkLogin' || req.path === '/goods/list') {
+			console.log('请求的地址为白名单')
+			next()
+		} else {
+			res.json({
+				status: '10001',
+				msg: '当前未登录,不能进行此操作',
+				result: ''
+			})
+		}
+	}
+})
+
 app.use('/', index);
 app.use('/users', users);
 app.use('/goods', goods);
