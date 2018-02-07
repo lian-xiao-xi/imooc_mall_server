@@ -78,7 +78,8 @@ router.get('/list', function(req, res, next) {
 
 // ******* 加入到购物车 ********
 router.post('/addCart', function(req, res) {
-	const userId = '100000077';
+	// const userId = '100000077';
+	let userId = req.cookies.userId || '';
 	// 从req中取productId参数（post和get取参数方式不同）
 	let productId = req.body.productId;
 

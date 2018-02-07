@@ -23,7 +23,7 @@ router.post('/login', function(req, res, next) {
 				msg: err.message
 			})
 		} else {
-			if(doc) {
+			if(doc) { // 数据库中存在此用户
 				console.log('routes/users.js 25: 在数据库中找到了此userName和userPwd')
 				// 向客户端存储cookie
 				res.cookie('userId', doc.userId, {
@@ -43,6 +43,12 @@ router.post('/login', function(req, res, next) {
 					result: {
 						userName: doc.userName
 					}
+				})
+			} else { // 数据库中不存在此用户
+				res.json({
+					status: '1',
+					msg: '数据库中不存在此用户',
+					result: ''
 				})
 			}
 			
@@ -68,7 +74,7 @@ router.post('/logout', function(req, res, next) {
 	})
 })
 
-// 校验
+// 登录校验
 router.get('/checkLogin', function(req, res, next) {
 	if(req.cookies.userId) { // 已登录
 		res.json({
@@ -83,6 +89,29 @@ router.get('/checkLogin', function(req, res, next) {
 			result: ''
 		})
 	}
+})
+
+// 当前用户购物车商品数据接口
+router.get('/cartList', function(req, res, next) {
+	let userId = req.cookies.userId;
+
+	User.findOne({userId: userId}, function(err, doc) {
+		if(err) {
+			res.json({
+				status: '1',
+				msg: err.message
+			})
+		} else {
+			if(doc) {
+				res.json({
+					status: '1',
+					msg: '',
+					result: doc.cartList
+					
+				})
+			}
+		}
+	})
 })
 
 module.exports = router;
