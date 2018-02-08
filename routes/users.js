@@ -94,7 +94,6 @@ router.get('/checkLogin', function(req, res, next) {
 // 当前用户购物车商品数据接口
 router.get('/cartList', function(req, res, next) {
 	let userId = req.cookies.userId;
-
 	User.findOne({userId: userId}, function(err, doc) {
 		if(err) {
 			res.json({
@@ -104,12 +103,68 @@ router.get('/cartList', function(req, res, next) {
 		} else {
 			if(doc) {
 				res.json({
-					status: '1',
+					status: '0',
 					msg: '',
 					result: doc.cartList
 					
 				})
 			}
+		}
+	})
+})
+
+// 删除用户购物车中商品
+router.post('/cartDel', function(req, res, next) {
+	let userId = req.cookies.userId;
+	let productId = req.body.productId;
+
+	User.update({userId: userId}, {
+		$pull: {
+			'cartList': {
+				'productId': productId
+			}
+		}
+	}, function (err, doc) {
+		if(err) {
+			res.json({
+				status: '1',
+				msg: err.message,
+				result: ''
+			})
+		} else {
+			res.json({
+				status: '0',
+				msg: 'suc',
+				result: 'suc'
+			})
+		}
+	})
+
+})
+
+// 修改用户购物车中商品的数量
+router.post('/cartEdit', function(req, res, next) {
+	let userId = req.cookies.userId;
+	let productId = req.body.productId;
+	let productNum = req.body.productNum;
+	let checked = req.body.checked;
+
+	User.update({'userId': userId, 'cartList.productId': productId}, {
+		'cartList.$.productNum': productNum,
+		'cartList.$.checked': checked,
+	}, function (err, doc) {
+		if(err) {
+			res.json({
+				status: '1',
+				msg: err.message,
+				result: ''
+			})
+		} else {
+			res.json({
+				status: '0',
+				msg: 'suc',
+				result: 'suc'
+			})
 		}
 	})
 })

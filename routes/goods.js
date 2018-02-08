@@ -132,7 +132,7 @@ router.post('/addCart', function(req, res) {
 						if(goodDoc) {
 							console.log('routes/goods.js 第111行，goodDoc: ', goodDoc)
 							goodDoc.productNum = 1;
-							goodDoc.checked = 1;
+							goodDoc.checked = '1';
 							userDoc.cartList.push(goodDoc);
 							userDoc.save(function (errSave, doc2) {
 								if(errSave) {
