@@ -218,4 +218,71 @@ router.post('/editCheckAll', function(req, res, next) {
 	})
 })
 
+// 查询用户地址接口
+router.get('/addressList', function(req, res, next) {
+	let userId = req.cookies.userId;
+	User.findOne({userId: userId}, function(err, doc) {
+		if(err) {
+			res.json({
+				status: '1',
+				msg: err.message
+			})
+		} else {
+			if(doc) {
+				res.json({
+					status: '0',
+					msg: '',
+					result: doc.addressList
+				})
+			}
+		}
+	})
+})
+
+router.post('/setDefault', function(req, res, next) {
+	let userId = req.cookies.userId;
+	let addressId = req.body.addressId;
+	if(!addressId) {
+		res.json({
+				status: '1003',
+				msg: '没有向后端传递 addressId 的数据'
+			});
+		return;
+	}
+	User.findOne({userId: userId}, function(err, userDoc) {
+		if(err) {
+			res.json({
+				status: '1',
+				msg: err.message
+			})
+		} else {
+			if(userDoc) {
+				let addressList = userDoc.addressList;
+				addressList.forEach((item) => {
+					if(item.addressId === addressId) {
+						item.isDefault = true;
+					} else {
+						item.isDefault = false;
+					}
+				})
+
+				userDoc.save((err1, doc) => {
+					if(err1) {
+						res.json({
+				status: '1',
+				msg: err.message
+			})
+					} else {
+						res.json({
+							status: '0',
+							msg: '设置默认地址成功',
+							result: '设置默认地址成功'
+						})
+					}
+				})
+			}
+		}
+	})
+})
+
 module.exports = router;
