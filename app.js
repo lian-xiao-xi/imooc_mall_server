@@ -16,10 +16,13 @@ var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'jade');
+
 // 添加如下两行
+// 使用ejs模板引擎，支持加载html模板
 app.engine('.html',ejs.__express);
 app.set('view engine', 'html');
-// app.set('view engine', 'jade');
+
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -37,7 +40,7 @@ app.use(function(req, res, next) {
 		next()
 	} else {
 		console.log(`app.js 39: path: ${req.path}, originalUrl: ${req.originalUrl}`)
-		if(req.originalUrl === '/users/login' || req.originalUrl === '/users/logout' || req.originalUrl === '/users/checkLogin' || req.path === '/goods/list') {
+		if(req.originalUrl === '/users/login' || req.originalUrl === '/users/logout'  || req.path === '/goods/list') {
 			console.log('请求的地址为白名单')
 			next()
 		} else {
